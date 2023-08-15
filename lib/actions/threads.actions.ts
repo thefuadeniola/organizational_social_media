@@ -75,7 +75,7 @@ export async function fetchThreadById(id: string) {
                     {
                         path: "author", // Populate the author field within children
                         model: User,
-                        select: "_id id name parentId image", // Select only _id and username fields of the author
+                        select: "_id id username parentId image", // Select only _id and username fields of the author
                     },
                     {
                         path: "children", // Populate the children field within children
@@ -83,7 +83,7 @@ export async function fetchThreadById(id: string) {
                         populate: {
                             path: "author", // Populate the author field within nested children
                             model: User,
-                            select: "_id id name parentId image", // Select only _id and username fields of the author
+                            select: "_id id username parentId image", // Select only _id and username fields of the author
                         },
                     },
                 ],
@@ -98,21 +98,24 @@ export async function fetchThreadById(id: string) {
 }
 
 export async function addCommentToThread(threadId: string, commentText: string, userId: string, path: string) {
-    connectToDB();
-
+    console.log(userId)
     try {
+        connectToDB();
+
         const originalThread = await Thread.findById(threadId);
         if (!originalThread) {
             throw new Error('Thread not found')
         }
-        const commentThread = new Thread({
+        const addedComment = await Thread.create({
             text: commentText,
             author: userId,
+            community: null,
             parentId: threadId
-        })
-        const savedCommentThread = await commentThread.save
 
-        originalThread.children.push(savedCommentThread._id)
+        })
+        await Thread.findByIdAndUpdate(threadId, {
+            $push: { children: addedComment._id }
+        })
 
         await originalThread.save
         revalidatePath(path)

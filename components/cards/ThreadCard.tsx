@@ -26,7 +26,7 @@ interface Props {
 
 const ThreadCard = ({ id, currentUserId, parentId, content, author, community, createdAt, comments, isComment }: Props) => {
     return (
-        <article className='flex w-full flex-col rounded-xl bg-dark-2 p-7'>
+        <article className={`flex w-full flex-col rounded-xl ${isComment ? 'px-0 xs:px-7' : 'bg-dark-2 p-7'}`}>
 
             <div className='container flex items-start justify-between'>
                 <div className='flex w-full flex-1 flex-row gap-4'>
@@ -38,10 +38,10 @@ const ThreadCard = ({ id, currentUserId, parentId, content, author, community, c
                     </div>
                     <div className='flex w-full flex-col'>
                         <Link href={`/profile/${author.id}`} className='w-fit'>
-                            <h4 className='cursor-pointer text-base-semibold text-light-1'>@{author.username}</h4>
+                            <h4 className='cursor-pointer text-base-semibold text-light-3'>@{author.username}</h4>
                         </Link>
                         <p className='mt-2 text-small-regular text-light-2'>{content}</p>
-                        <div className='mt-5 flex flex-col gap-3'>
+                        <div className={`${isComment && 'mb-10'}mt-5 flex flex-col gap-3`}>
                             <div className='flex gap-3.5'>
                                 <Image src='/assets/heart-gray.svg' alt='' width={24} height={24} className='cursor-pointer object-contain' />
                                 <Link href={`/thread/${id}`}>

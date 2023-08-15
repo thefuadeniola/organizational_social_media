@@ -33,6 +33,7 @@ function Comment({ threadId, currentUserImg, currentUserId }: Props) {
         resolver: zodResolver(CommentValidation),
         defaultValues: {
             thread: "",
+            accountId: currentUserId
         },
     });
 
@@ -40,7 +41,7 @@ function Comment({ threadId, currentUserImg, currentUserId }: Props) {
         await addCommentToThread(
             threadId,
             values.thread,
-            JSON.parse(currentUserId),
+            currentUserId,
             pathname
         );
 
